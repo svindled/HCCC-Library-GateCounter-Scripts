@@ -1,7 +1,4 @@
-#!/usr/bin/python
-
-# Written By Johnathan Cintron and Devlyn Courtier
-# Copyright (c) 2016
+# Written By Johnathan Cintron and Devlyn Courtier for the HCCC Library
 
 import sys
 import time, MySQLdb
