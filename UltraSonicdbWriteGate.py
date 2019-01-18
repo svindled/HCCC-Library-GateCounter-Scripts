@@ -3,7 +3,7 @@
 import sys
 import MySQLdb
 from datetime import datetime
-from time import sleep
+from time import sleep, time
 import RPi.GPIO as GPIO
 
 ultraSonicConst = "95"
@@ -40,10 +40,10 @@ try:
 		GPIO.output(TRIG, False)
 
 		while GPIO.input(ECHO) == 0:
-			pulse_start = time.time()
+			pulse_start = time()
 
 		while GPIO.input(ECHO) == 1:
-			pulse_end = time.time()
+			pulse_end = time()
 
 		pulse_duration = pulse_end - pulse_start
 
