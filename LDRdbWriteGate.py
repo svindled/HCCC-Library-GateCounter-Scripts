@@ -26,8 +26,7 @@ mcp = Adafruit_MCP3008.MCP3008(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
 
 try:
 	while True:
-		curr_date = datetime.now().strftime("%Y-%m-%d")
-		curr_time = datetime.now().strftime("%H:%M:%S")
+		curr_date = datetime.now()
 
 		# Read current LDR value from ADC
 		#curr_ldr = mcp.read_adc(0)
@@ -43,9 +42,9 @@ try:
 		cursor = db.cursor()
 
 		# Prepare SQL query to INSERT a record into the database.
-		sql = "INSERT INTO LDRSTATS (date, time, gatecount) VALUES ('%s', '%s', '%d')" % (curr_date, curr_time, count)
+		sql = "INSERT INTO LDRSTATS (datetime, gatecount) VALUES ('%s', '%d')" % (curr_date.isoformat(' '), count)
 
-		if any( [datetime.now().strftime("%M") == "00", int(datetime.now().strftime("%M")) == 10, int(datetime.now().strftime("%M")) == 20, int(datetime.now().strftime("%M")) == 30, int(datetime.now().strftime("%M")) == 40, int(datetime.now().strftime("%M")) == 50] ) and (datetime.now().strftime("%S") == "00"):
+		if (curr_date.minute % 10 == 0) and (curr_date.second == 0):
 			try:
 				# Execute the SQL command
 				cursor.execute(sql)

@@ -3,7 +3,9 @@
 #!/usr/bin/python
 
 import sys
-import time, MySQLdb
+import MySQLdb
+from time import sleep
+from datetime import datetime
 import RPi.GPIO as GPIO
 
 # Set RPi GPIO Mode
@@ -31,15 +33,13 @@ try:
 		# prepare a cursor object using cursor() method
 		cursor = db.cursor()
 
-		curr_date = time.strftime("%Y-%m-%d")
-		curr_time = time.strftime("%H:%M:%S")
-
+		curr_date = datetime.now()
 
 		# Prepare SQL query to INSERT a record into the database.
-		sql = "INSERT INTO PIRSTATS (date, time, gatecount) VALUES ('%s', '%s', '%d')" % (curr_date, curr_time, count)
+		sql = "INSERT INTO PIRSTATS (datetime, gatecount) VALUES ('%s', '%d')" % (curr_date.isoformat(' '), count)
 
 
-		if any( [time.strftime("%M") == "00", int(time.strftime("%M")) == 10, int(time.strftime("%M")) == 20, int(time.strftime("%M")) == 30, int(time.strftime("%M")) == 40, int(time.strftime("%M")) == 50]) and (time.strftime("%S") == "00"):
+		if (curr_date.minute % 10 == 0) and (curr_date.second == 0):
 			try:
 				# Execute the SQL command
 				cursor.execute(sql)
@@ -52,7 +52,7 @@ try:
 		# Disconnect from database server
 		db.close()
 
-		time.sleep(1)
+		sleep(1)
 except KeyboardInterrupt:
 	print ("\nCtrl-C pressed cleaning up GPIO")
 	GPIO.cleanup()
